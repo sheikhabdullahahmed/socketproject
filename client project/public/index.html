@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Good ho ga</h2>
+    <div id="allmessages"></div>
+
+    <input type="text" name="" id="message" placeholder="Enter a message" />
+    <button id="sendbtn">Click it</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      // backend serveral url
+      const socket = io("http://localhost:5000");
+
+      const roomId = "room-123";
+      const sender = "user-1";
+
+      const sendbtn = document.getElementById("sendbtn");
+      const message = document.getElementById("message");
+      const allmessage = document.getElementById("allmessages");
+
+      //  test join-rooom event
+      socket.emit("join-room", roomId);
+
+      socket.on("receive-message", (msg) => {
+        console.log("Message received", msg);
+
+        const p = document.getElementById("p");
+        p.innerText = `${msg.sender}: ${msg.encryptedText}`;
+        allmessage.appendChild(p);
+      });
+
+
+      sendbtn.addEventListener("click", () => {
+        socket.emit("send-message", {
+            roomId,
+            sender,
+            encryptedText,
+            imageUrl,
+        });
+        message.value = "";
+      })
+    </script>
+  </body>
+</html>

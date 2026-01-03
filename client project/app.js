@@ -1,28 +1,36 @@
-dotenv.config(); 
+dotenv.config();
+import http from "http";
 import cookieParser from "cookie-parser";
 import e from "express";
+import { Server } from "socket.io";
 import dotenv from "dotenv";
-import {connectDB} from './src/config/db.js'
-import authRoutes from './src/controller/auth/routes.controller.js'
-import roomroutes from './src/controller/room/routes.controller.js'
+import { connectDB } from "./src/config/db.js";
+import { sockethandler } from "./src/sockets/index.js";
+import authRoutes from "./src/controller/auth/routes.controller.js";
+import roomroutes from "./src/controller/room/routes.controller.js";
+import path from "path";
 
+const app = e();
+const server = http.createServer(app);
+const PORT = 5000;
 
-const app = e()
-const PORT =5000;
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+sockethandler(io);
 
 app.use(e.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
-connectDB()
+connectDB();
+
+app.use("/api/auth", authRoutes);
+app.use("/api/rooms", roomroutes);
 
 
-app.use("/api/auth", authRoutes)
-app.use("/api/room", roomroutes)
-
-
-app.get("/", (req, res) => {
-  res.send(" API is running...");
-});
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -32,6 +40,12 @@ app.use((err, req, res, next) => {
     .json({ message: "Something went wrong!", error: err.message });
 });
 
+// app.use(e.static(path.join(path.resolve("./public"))))
+app.use(e.static(path.resolve("./public")));
+
+app.get("/", (req, res) => {
+  return res.sendFile(path.join(path.resolve("./public"), "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

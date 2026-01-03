@@ -18,7 +18,7 @@ export const createroom = async (req, res) => {
         coordinates: [lat, lng],
       },
       createdBy: req.userId,
-    //   console.log("req.userId =", req.userId);
+      //   console.log("req.userId =", req.userId);
       expiresAt: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hour kay lia
     });
 
@@ -29,26 +29,25 @@ export const createroom = async (req, res) => {
 };
 
 
-
+// routing ka thora issue ta may ya dey raha ha ta /room/room/:id 
+// is tarha nhi ho taha ha ya ho ta ha room/:roomId
 
 // join room
-export const joinroom = async(req,res) => {
-    try {
-        const {roomId} = req.params;
+export const joinroom = async (req, res) => {
+  try {
+    const { roomId } = req.params;
 
-        const room = await Room.findOne({roomId});
+    const room = await Room.findOne({ roomId });
 
-        if(!room) 
-        return res.status(404).json({message: "Room not found"});
-        
-        if(room.expiresAt < new Date())
-            return res.status(410).json({message: "Room expired"})
+    if (!room) return res.status(404).json({ message: "Room not found" });
 
-        res.josn({message: "Room joined", room})
-    } catch (err ) {
-        res.status(400).json({message: err.message});
-    }
-}
+    if (room.expiresAt < new Date())
+      return res.status(410).json({ message: "Room expired" });
 
+    res.json({ message: "Room joined", room });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
 

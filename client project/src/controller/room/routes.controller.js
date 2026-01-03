@@ -7,6 +7,7 @@ import {protect} from '../../middleware/auth.middleware.js'
 const router = express.Router()
 
 router.post('/roomcreat',protect, createroom)
+router.get('/:roomId',protect, joinroom)
 // router.post('/register', )
 
 
