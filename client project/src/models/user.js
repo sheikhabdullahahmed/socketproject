@@ -1,35 +1,40 @@
-import mongoose from "mongoose";
+  import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    default: "Anonymous",
-  },
-  email: {
-    type: String,
-    unique: true,
-  },
-  password: {
-    type: String,
-  },
-  location: {
-    type: {
+  const userSchema = new mongoose.Schema({
+    name: {
       type: String,
-      enum: ["Point"],  // "Point" ka matlab: ek exact location
-      default: "Point", // enum: ["Point"] → sirf "Point" allow hoga
+      default: "Anonymous",
     },
-    coordinates: {
-      type: [Number], // // [lng, lat]
-      index: "2dsphere",
+    email: {
+      type: String,
+      unique: true,
     },
-  },
+    password: {
+      type: String,
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],  // "Point" ka matlab: ek exact location
+        default: "Point", // enum: ["Point"] → sirf "Point" allow hoga
+        required: true,
+      },
+      coordinates: {
+        type: [Number], // // [lng, lat]
+        required: true, 
+      },
+    },
 
-  fcmToken: String,
+    socketId: String,
 
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+    // fcmToken: String,
 
-export default mongoose.model("User", userSchema);
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  });
+
+
+  userSchema.index({Location: "2dsphere"})
+  export default mongoose.model("User", userSchema);

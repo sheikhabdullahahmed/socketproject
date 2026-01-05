@@ -73,8 +73,8 @@ export const getprofile = async (req, res) => {
 
 export const updatelocation = async (req,res) => {
     try {
-        const {lat,lng} = req.body;
-        if (!lat || !lng )
+        const {lng, lat} = req.body;
+        if (!lng || !lat )
             return res.status(400).json({message: "Location required"})
 
         const user = await User.findByIdAndUpdate(

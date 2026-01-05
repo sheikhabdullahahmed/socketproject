@@ -6,16 +6,16 @@ import { v4 as uuidv4 } from "uuid";
 
 export const createroom = async (req, res) => {
   try {
-    const { lat, lng } = req.body;
+    const { lng, lat } = req.body;
 
-    if (!lat || !lng)
+    if (!lng || !lat)
       return res.status(400).json({ message: "Location required" });
 
     const room = await Room.create({
       roomId: uuidv4(),
       location: {
         type: "Point",
-        coordinates: [lat, lng],
+        coordinates: [lng, lat],
       },
       createdBy: req.userId,
       //   console.log("req.userId =", req.userId);

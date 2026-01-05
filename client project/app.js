@@ -11,6 +11,11 @@ import roomroutes from "./src/controller/room/routes.controller.js";
 import path from "path";
 
 const app = e();
+
+// important note;
+// jab apnay socket use karna ha tu server.listen ho ga 
+
+// HTTP server banana ZAROORI hai
 const server = http.createServer(app);
 const PORT = 5000;
 
@@ -47,6 +52,6 @@ app.get("/", (req, res) => {
   return res.sendFile(path.join(path.resolve("./public"), "index.html"));
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

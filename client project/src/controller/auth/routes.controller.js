@@ -9,8 +9,8 @@ const router = express.Router()
 
 router.post('/register', singup)
 router.post('/login', login)
-router.get('/profile',protect, getprofile)
-router.get('/updatep',protect, updatelocation)
+router.get('/profile/:id',protect, getprofile)
+router.put('/updatep/:id',protect, updatelocation)
 
 
 

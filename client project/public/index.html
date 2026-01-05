@@ -12,14 +12,14 @@
     <input type="text" name="" id="message" placeholder="Enter a message" />
     <button id="sendbtn">Click it</button>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
     <script>
       // backend serveral url
-      const socket = io("http://localhost:5000");
+      const socket = io();
 
       const roomId = "room-123";
-      const sender = "user-1";
+      const sender = "6957aabf075bdf6bfb0b1965";
 
       const sendbtn = document.getElementById("sendbtn");
       const message = document.getElementById("message");
@@ -30,19 +30,19 @@
 
       socket.on("receive-message", (msg) => {
         console.log("Message received", msg);
-
-        const p = document.getElementById("p");
+        const p = document.createElement("p");
         p.innerText = `${msg.sender}: ${msg.encryptedText}`;
         allmessage.appendChild(p);
       });
 
 
       sendbtn.addEventListener("click", () => {
+        const encryptedText = message.value;
         socket.emit("send-message", {
             roomId,
             sender,
-            encryptedText,
-            imageUrl,
+            encryptedText,  
+            imageUrl: null,
         });
         message.value = "";
       })
