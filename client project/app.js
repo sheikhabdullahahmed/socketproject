@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import e from "express";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
+import  cors from 'cors'
 import { connectDB } from "./src/config/db.js";
 import { sockethandler } from "./src/sockets/index.js";
 import authRoutes from "./src/controller/auth/routes.controller.js";
@@ -24,6 +25,12 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+
+app.use(cors({
+  origin: "http://localhost:5173", // frontend URL
+  credentials: true,               // allow cookies
+}));
 
 sockethandler(io);
 

@@ -1,22 +1,37 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../../models/user.js";
+import message from "../../models/message.js";
 // import authmiddelware from '../../middleware/auth.middleware.js'
 
 export const singup = async (req, res) => {
   try {
-    const { name, email, password, lat, lng } = req.body;
+    const { name, email, password, location } = req.body;
     console.log(req.body);
+
+    if(!location || !location.coordinates) {
+      return res.status(400).json({message: "Location required"});
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      location: {
-        type: "Point",
-        coordinates: [lng, lat],
-      },
+      location,
+
+      // ek band araha ha ta may location: {
+      //   type: "Point",
+      //   coordinates: [lng, lat], // ❌ lat/lng undefined → null
+      // },
+      
+      // asa dey raha ha ta 
+      // pher aya error 
+      // Tum backend me body se lat / lng rea d kar rahe ho, jabke frontend location object bhej raha hai.
+      // lat aur lng exist hi nahi karte
+      // lat aur lng exist hi nahi karte
+      // pher is ka solution location send karna 
+      // lat lng asay nhi  
     });
     res.status(201).json({ user });
   } catch (err) {

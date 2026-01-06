@@ -26,6 +26,7 @@ export const message = (io, socket) => {
         roomId,
       });
     });
+    console.log("Nearby users:", nearbyUsers.length);
   });
 
   // Send message
