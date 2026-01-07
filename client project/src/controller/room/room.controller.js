@@ -1,3 +1,4 @@
+import room from "../../models/room.js";
 import Room from "../../models/room.js";
 // import User from "../../models/user.js";
 import { v4 as uuidv4 } from "uuid";
@@ -6,21 +7,18 @@ import { v4 as uuidv4 } from "uuid";
 
 export const createroom = async (req, res) => {
   try {
-    const { lng, lat } = req.body;
+    const { location } = req.body;
 
-    if (!lng || !lat)
+    if (!location)
       return res.status(400).json({ message: "Location required" });
 
     const room = await Room.create({
       roomId: uuidv4(),
-      location: {
-        type: "Point",
-        coordinates: [lng, lat],
-      },
+      location,
       createdBy: req.userId,
-      //   console.log("req.userId =", req.userId);
       expiresAt: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hour kay lia
     });
+     console.log(room),
 
     res.status(201).json({ room });
   } catch (err) {

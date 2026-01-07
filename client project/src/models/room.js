@@ -11,7 +11,10 @@ const roomSchema = new mongoose.Schema({
       enum: ["Point"],
       default: "Point",
     },
-    coordinates: [Number],
+    coordinates: {
+      type: [Number], // // [lng, lat]
+      required: true,
+    },
   },
    
   createdBy: {

@@ -19,7 +19,7 @@ function Login() {
         password: form.password,
       });
       console.log("user Login ", data);
-      navigate("/dashboard");
+      navigate("/creatroom");
     } catch (error) {
       // console.error("err", err.message);
       setError((error as Error).message || "Something went wrong");

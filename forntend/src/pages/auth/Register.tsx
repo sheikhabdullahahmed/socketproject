@@ -24,6 +24,7 @@ export const Register = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  // const [location, setLocation] = useState<{ lng: number; lat: number } | null>(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
