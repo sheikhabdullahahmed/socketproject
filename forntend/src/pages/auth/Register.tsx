@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { registerUser } from "../../services/auth.service";
+import { socket } from "../socket/socket";
 
 // formate sahi ho phalay longitude pher latitude asa ho ga
 // waran error i ga
@@ -14,6 +15,10 @@ interface FormState {
   lat: number | null;
 }
 
+interface Id {
+  _id: string;
+}
+
 export const Register = () => {
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -22,6 +27,9 @@ export const Register = () => {
     lng: null,
     lat: null,
   });
+  const [user, setUser] = useState<Id>({
+    _id: "",
+  });
 
   const [loading, setLoading] = useState(false);
   // const [location, setLocation] = useState<{ lng: number; lat: number } | null>(null);
@@ -29,7 +37,7 @@ export const Register = () => {
   const navigate = useNavigate();
 
   // Auto get location on load
-  // ya hamari browser say direct location get kar lay ga 
+  // ya hamari browser say direct location get kar lay ga
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -45,7 +53,11 @@ export const Register = () => {
     );
   }, []);
 
-  
+  useEffect(() => {
+    if (user) {
+      socket.emit("register-user", user._id);
+    }
+  }, [user]);
 
   const handlesubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +92,7 @@ export const Register = () => {
 
   return (
     <div>
-      <form onSubmit={handlesubmit} >
+      <form onSubmit={handlesubmit}>
         <input
           type="text"
           name="name"
@@ -100,11 +112,9 @@ export const Register = () => {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
 
-        {error && <p style={{color: "red"}}>{error}</p>}
-        
-        <button type="submit" >
-          refister 
-        </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <button type="submit">refister</button>
       </form>
     </div>
   );

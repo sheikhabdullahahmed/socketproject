@@ -20,17 +20,24 @@ const app = e();
 const server = http.createServer(app);
 const PORT = 5000;
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-  },
-});
 
 
 app.use(cors({
   origin: "http://localhost:5173", // frontend URL
-  credentials: true,               // allow cookies
+  credentials: true,              
+  // allow cookies
+
 }));
+
+
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
+
 
 sockethandler(io);
 

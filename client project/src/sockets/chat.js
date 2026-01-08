@@ -5,9 +5,10 @@ export const message = (io, socket) => {
   // Join message
   socket.on("join-room", async ({ roomId, userId }) => {
     socket.join(roomId);
-    // console.log(`User ${socket.id} joined room ${roomId}`);
+    console.log(`User ${socket.id} joined room ${roomId}`);
 
     const joinUser = await User.findById(userId);
+    if(!joinUser || !joinUser.location) return;
 
     const nearbyUsers = await User.find({
       location: {
@@ -45,6 +46,6 @@ export const message = (io, socket) => {
 
   //   Leave room
   socket.on("leave-room", (roomId) => {
-    socket.leave(roomId);
+    socket.leave(roomId)
   });
 };

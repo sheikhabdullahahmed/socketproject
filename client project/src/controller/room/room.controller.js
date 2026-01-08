@@ -9,8 +9,11 @@ export const createroom = async (req, res) => {
   try {
     const { location } = req.body;
 
-    if (!location)
-      return res.status(400).json({ message: "Location required" });
+
+     if(!location || location.lng === null || location.lat === null) {
+    console.error("location not aviable")
+    return;
+   }
 
     const room = await Room.create({
       roomId: uuidv4(),
@@ -33,9 +36,11 @@ export const createroom = async (req, res) => {
 // join room
 export const joinroom = async (req, res) => {
   try {
-    const { roomId } = req.params;
+    const { roomId }  = req.params;
+    // console.log("roomId => ",roomId)
 
     const room = await Room.findOne({ roomId });
+    // console.log(room)
 
     if (!room) return res.status(404).json({ message: "Room not found" });
 

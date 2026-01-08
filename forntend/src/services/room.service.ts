@@ -1,18 +1,18 @@
 import {api} from './api'
 
-interface Location {
-    lng: number,
-    lat: number,
-    type:"Point",
-    coordinates: [number, number]
+
+interface Geolocation {
+    type: "Point";
+    coordinates: [number, number];
 }
 
+
 interface LocationRequest {
-    lng: string,
-    lat: string,
-     location: Location;    
-   
+    location: Geolocation;
 }
+
+
+
 
 
 export const Createroom = (data: LocationRequest) => {
@@ -20,3 +20,15 @@ export const Createroom = (data: LocationRequest) => {
 }
 
 
+// masla ya ta kay manay backend may routes sahi define nhi karay tay is ki wajay say is ko roomId nhi mil rahe te 
+// is ka solution ya ta kay manay routes sahi karay 
+// /rooms/join/:ro omId
+
+
+// roomId sirf string dey ha 
+// may phalay poora object bana raah ha ta is tarha nhi ho ta hai
+
+export const Joinroom = (roomId: string) => {
+    return api.get(`/rooms/join/${roomId}`)
+}
+ 

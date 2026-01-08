@@ -1,47 +1,70 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Createroom } from "../../services/room.service";
 import { useNavigate } from "react-router-dom";
+import JoinRoom from "./JoinRoom";
+
+type UserLocation = {
+  lng: number | null;
+  lat: number | null;
+};
 
 function CreateRoom() {
   const [roomId, setRoomId] = useState<string>("");
+  const [location, setLocation] = useState<UserLocation>({
+    lng: null,
+    lat: null,
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const creatroom = async () => {
-    if (!location) {
-      console.error("Location is not ready yet");
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          lng: pos.coords.longitude,
+          lat: pos.coords.latitude,
+        });
+      },
+      (err) => console.error(err)
+    );
+  }, []);
 
-      return; 
+  const creatroom = async () => {
+    setLoading(true);
+    setError("");
+
+    if (!location || location.lng === null || location.lat === null) {
+      setError("location not aviable");
+      return;
     }
     try {
       const { data } = await Createroom({
-         location: {
-        type: "Point",
-        coordinates: [location.lng!, location.lat!], //  GeoJSON format
-      },
+        location: {
+          type: "Point",
+          coordinates: [location.lng, location.lat], //  GeoJSON format
+        },
       });
       console.log("Room created:", data);
     } catch (error) {
       setError((error as Error).message || "Something went wrong");
     }
   };
+  // console.log("creatroom", creatroom)
 
   return (
     <div>
       <div>
-        <form action="">
-          <h2>Rooms</h2>
+        {/* <form action=""> */}
+        <h2>Rooms</h2>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <button onClick={creatroom}>Create Room</button>
-        </form>
-        <input
-          placeholder="Enter Room ID"
-          onChange={(e) => setRoomId(e.target.value)}
-        />
-        <button>Join Room</button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <button type="button" onClick={creatroom}>
+          Create Room
+        </button>
+        <JoinRoom/>
+        {/* </form> */}
       </div>
     </div>
   );
